@@ -16,7 +16,7 @@ pipeline {
         stage("Clone Repository"){
             agent { label DEV_NODE }
             steps{
-                git branch: 'final', url: 'https://github.com/RobertoMen2a/proyecto-final-vue.git'
+                git branch: 'main', url: 'https://github.com/RobertoMen2a/proyecto-final-vue.git'
                 sh "echo Repositorio Clonado en DEV!"
             }
         }
