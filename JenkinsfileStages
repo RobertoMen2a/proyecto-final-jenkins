@@ -23,7 +23,7 @@ pipeline {
                 sh "dir"
             }
         }
-        stage("Preparando Docker image"){
+        stage("Preparando Docker image y Desplegando de DEV"){
             agent { label DEV_NODE }
             steps{                
                 sh "echo Preparando Docker image"                
@@ -31,6 +31,7 @@ pipeline {
                 stash name: "stash-artifact", includes: "construyeya.tar"
                 archiveArtifacts 'construyeya.tar'
                 sh "echo Imagen creada"
+                sh "docker run -p 8081:80 -d --name dev_proyecto_vue proyecto_vue/final:v1"
             }
         }
         stage("Desplegando Entorno QA"){
