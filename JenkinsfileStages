@@ -18,25 +18,30 @@ pipeline {
             steps{
                 git branch: 'main', url: 'https://github.com/RobertoMen2a/proyecto-final-vue.git'
                 sh "echo Repositorio Clonado en DEV!"
+                sh "pwd"
             }
         }
         stage("Preparando Docker image"){
-            agent { label PROD_NODE }
+            agent { label DEV_NODE }
             steps{                
+                sh "echo Preparando Docker image"
                 sh "docker build -t proyecto_vue/final:v1 ."
                 sh "docker save -o construyeya.tar proyecto_vue/final:v1"
                 stash name: "stash-artifact", includes: "construyeya.tar"
                 archiveArtifacts 'construyeya.tar'
+                sh "echo Imagen creada"
             }
         }
         stage("Deployment on QA environment"){
             agent { label QA_NODE }
             steps{
+                sh "echo Entorno QA"
                 unstash "stash-artifact"
                 sh "docker load -i construyeya.tar"
                 sh "docker rm construyeya -f || true"
                 // sh "docker run -idt -p 8081:80 --name construyeya proyecto_vue/final:v1 /bin/bash -c 'service mysql start; service apache2 start; mysql -h localhost --user='root' --password='123456' < db_sistema_mas_datos.sql; bash'"
                 sh "docker-compose up -d"
+                sh "echo QA publicado"
                 
             }
         }
@@ -48,6 +53,7 @@ pipeline {
                 //sh "docker run -d -p 4444:4444 -p 5995:5900 -e VNC_NO_PASSWORD=1 --name browser --link tiendav1 selenium/standalone-chrome-debug:3.141.59-titanium || true"
                 //sh "docker container start tiendav1 || true"
                 //sh "mvn test"
+                sh "echo TEST QA"
                 sh "curl http://localhost:80"
             }
 
@@ -69,6 +75,7 @@ pipeline {
         stage("Deploy in PROD environment"){
             agent { label PROD_NODE}
             steps {
+                sh "echo Despliegue en PROD"
                 // sh "ansible-playbook playbook.yml"
                 // sh "echo 'DONE..'"
                 sh "docker-compose up -d"
