@@ -19,6 +19,8 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/RobertoMen2a/proyecto-final-vue.git'
                 sh "echo Repositorio Clonado en DEV!"
                 sh "pwd"
+                sh "docker build -t proyecto_vue/final:v1 ."
+                sh "dir"
             }
         }
         stage("Preparando Docker image"){
