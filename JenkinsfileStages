@@ -38,8 +38,7 @@ pipeline {
             steps{
                 sh "echo Entorno QA"
                 unstash "stash-artifact"
-                sh "docker load -i construyeya.tar"
-                sh "docker rm construyeya -f || true"                
+                sh "docker load -i construyeya.tar"                              
                 sh "docker-compose up -d"
                 sh "echo QA publicado"
                 
@@ -58,7 +57,7 @@ pipeline {
             agent { label PROD_NODE}
             steps {
                 sh "echo Despliegue en PROD"                
-                sh "docker-compose up -d"
+                sh "docker run -p 8081:80 -d --name prueba_vue proyecto_vue/final:v1"
             }
 
         }
