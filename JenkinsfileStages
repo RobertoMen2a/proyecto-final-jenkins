@@ -39,6 +39,7 @@ pipeline {
                 sh "echo Entorno QA"
                 unstash "stash-artifact"
                 sh "docker load -i construyeya.tar"                              
+                sh "docker rm qa_vue -f || true"
                 sh "docker run -p 8081:80 -d --name qa_vue proyecto_vue/final:v1"
                 sh "echo QA publicado"
                 
@@ -56,7 +57,7 @@ pipeline {
         stage("Deploy in PROD environment"){
             agent { label PROD_NODE}
             steps {
-                sh "echo Despliegue en PROD"                
+                sh "echo Despliegue en PROD"                         
                 sh "docker run -p 8082:80 -d --name prod_vue proyecto_vue/final:v1"
             }
 
