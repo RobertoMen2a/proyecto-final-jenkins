@@ -24,7 +24,7 @@ pipeline {
             }
         }
         stage("Preparando Docker image"){
-            //agent { label DEV_NODE }
+            agent { label DEV_NODE }
             steps{                
                 sh "echo Preparando Docker image"
                 //sh "docker build -t proyecto_vue/final:v1 ."
